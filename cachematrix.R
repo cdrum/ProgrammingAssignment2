@@ -6,16 +6,16 @@
 
 makeCacheMatrix <- function(x = matrix()) {
     s <- NULL # solved value (was m in vector mean example)
-    set <- function(y) {
+    set <- function(y) { # Constructor that stores supplied matrix
         x <<- y
         s <<- NULL
     }
-    get <- function() x
-    setSolved <- function(solve) s <<- solve
-    getSolved <- function() s
+    get <- function() x # Returns cached original that is stored
+    setSolved <- function(solve) s <<- solve # stores the solved, or inverse of the (cached) matrix
+    getSolved <- function() s # returns the solved, or inverse of the (cached) matrix
     list(set = set, get = get,
          setSolved = setSolved,
-         getSolved = getSolved)
+         getSolved = getSolved) # storage
 }
 
 
@@ -26,14 +26,16 @@ makeCacheMatrix <- function(x = matrix()) {
 
 cacheSolve <- function(x, ...) {
     ## Return a matrix that is the inverse of 'x'
-    s <- x$getSolved()
-    if(!is.null(s)) {
+    s <- x$getSolved() # store the solved (inverse) matrix of original matrix in s
+    if(!is.null(s)) { # here we check if the solved matrix has been cached. if yes, then we simply return it
         message("getting cached data")
         return(s)
     }
-    data <- x$get()
-    s <- solve(data, ...)
-    x$setSolved(s)
+    
+    # We dont have the inverse of the matrix cahced, so let's continue
+    data <- x$get() # get the matrix
+    s <- solve(data, ...) # solve (inverse) the matrix (and cache the matrix), store in s
+    x$setSolved(s) # cache the solved matrix
     s
 }
 
